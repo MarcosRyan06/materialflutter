@@ -1,105 +1,126 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart'; 
+ 
+void main() { 
+  runApp(const MainApp()); 
+} 
+ 
+class MainApp extends StatelessWidget { 
+  const MainApp({super.key}); 
+ 
+  @override 
+  Widget build(BuildContext context) { 
+    return MaterialApp( 
+      debugShowCheckedModeBanner: false, //tira o selinho DEBUG 
+ 
+      home: Scaffold( 
 
-void main() {
-  runApp(const MainApp());
-}
-
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false, //Tira o selinho de debug,
-      home: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.lightBlueAccent, //Cor do appBar,
-          toolbarHeight: 80, //Altura do appbar,
-          title: Text(
-            'Tentando Fazer Sozinho, Mas ta dificil', //Titulo do appBar,
+          backgroundColor: Colors.lightBlueAccent,
+          title: const Text(
+            'Atividade Avaliativa - Layout Com Column e Row no Flutter',
             style: TextStyle(
-              //Estilos do appBar,
-              color: Colors.white, //Cor da fonte,
-              fontSize: 22, //Tamanho da fonte,
+              fontSize: 26,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
             ),
           ),
         ),
 
-        backgroundColor: Colors.grey, //Cor de Fundo,
 
-        body: Center(
-          child: Column( //Aqui tudo que esta no children vai ficar um em baixo do outro,
-            mainAxisAlignment: MainAxisAlignment.center, // Aqui deixa tudo centralizado na tela,
+
+        backgroundColor: Colors.tealAccent,
+
+        body: Center( 
+          child: Column( 
+            mainAxisAlignment: MainAxisAlignment.center, 
             children: [
               Text(
-                'Marcos Ryan Souza De Jesus', //Texto,
+                'Olá Pessoal!',
                 style: TextStyle(
-                  fontSize: 20, //Tamanho da Fonte,
-                  color: Colors.black, //Cor da Fonte,
-                  fontWeight: FontWeight.bold, //Fonte em NEgrito,
-                  fontStyle: FontStyle.italic, //Fonte em italico,
-                ),
-              ),
-
-              SizedBox(height: 20), // Espaçamento em altura,
-
-              Text(
-                'Desenvolvimento de Sistemas',
-                style: TextStyle(
-                  fontSize: 26,
-                  color: Colors.pink,
+                  fontSize: 42,
+                  color: Colors.blue,
                   fontWeight: FontWeight.bold,
-                  fontStyle: FontStyle.normal,
                 ),
               ),
 
-              SizedBox(height: 20),
+              SizedBox(height: 22),
 
               Text(
-                'Programação Mobile - Flutter',
+                'Estudando Flutter',
                 style: TextStyle(
-                  fontSize: 23,
-                  color: Colors.deepPurple,
-                  fontStyle: FontStyle.italic,
+                  fontSize: 32,
+                  fontStyle: FontStyle.normal,
+                  color: Colors.green,
                 ),
               ),
 
-              SizedBox(height: 50),
+              SizedBox(height: 22),
 
-              Row( // Aqui as children vão ficar lado a lodo, 
+              Text(
+                'Bora Codar',
+                style: TextStyle(
+                  fontSize: 42,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.deepOrange,
+                ),
+              ),
+
+              SizedBox(height: 22),
+
+              Row(
                 mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    'Não desista do seus Sonhos',
+                    'Jogos',
+                    textAlign: TextAlign.left,
                     style: TextStyle(
-                      fontSize: 30,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontStyle: FontStyle.normal,
+                      fontSize: 22,
+                      fontStyle: FontStyle.italic,
+                      color: Colors.deepPurple,
                     ),
                   ),
 
-                  SizedBox(width: 140),
+                  SizedBox(width: 44),
 
-                  Row(
-                    children: [
-                      Text(
-                        '2026',
-                        style: TextStyle(
-                          fontSize: 30,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontStyle: FontStyle.normal,
-                        ),
-                      ),
-                    ],
+                  Text(
+                    'Música',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 26,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.pinkAccent,
+                    ),
+                  ),
+                  
+                  SizedBox(width: 44),
+
+                  Text(
+                    'Séries',
+                    textAlign: TextAlign.right,
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontStyle: FontStyle.italic,
+                      color: Colors.deepOrangeAccent,
+                    ),
                   ),
                 ],
               ),
+
+              SizedBox(height: 22),
+
+              Text(
+                '2026 - Vamos Nessa!',
+                style: TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey,
+                ),
+              ),
             ],
-          ),
-        ),
-      ),
-    );
-  }
+          ), 
+        ), 
+      ), 
+    ); 
+  } 
 }
