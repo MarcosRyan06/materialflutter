@@ -1,126 +1,104 @@
-import 'package:flutter/material.dart'; 
- 
-void main() { 
-  runApp(const MainApp()); 
-} 
- 
-class MainApp extends StatelessWidget { 
-  const MainApp({super.key}); 
- 
-  @override 
-  Widget build(BuildContext context) { 
-    return MaterialApp( 
-      debugShowCheckedModeBanner: false, //tira o selinho DEBUG 
- 
-      home: Scaffold( 
+import 'package:flutter/material.dart';
 
-        appBar: AppBar(
-          backgroundColor: Colors.lightBlueAccent,
-          title: const Text(
-            'Atividade Avaliativa - Layout Com Column e Row no Flutter',
-            style: TextStyle(
-              fontSize: 26,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
+//Ponto de entrada do aplicativo Flutter
+void main() {
+  runApp(const MainApp());
+}
+
+//App principal que configura MaterialApp
+class MainApp extends StatelessWidget {
+  const MainApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // Material fornece tema e navegação básica para o app
+    return const MaterialApp(
+      debugShowCheckedModeBanner: false, //Remove o selo Debug
+      home: const TelaSoma(), //Tela Inicial do App
+    );
+  }
+}
+
+//********TELA SOMA ***********/
+
+//Tela que precisa manter estado (valores dos inputs e resultado)
+class TelaSoma extends StatefulWidget {
+  const TelaSoma({super.key});
+
+  @override
+  State<TelaSoma> createState() => _TelaSomaState();
+}
+
+//Estado da TelaSoma: é aqui que guardamos os controllers e o resultado
+class _TelaSomaState extends State<TelaSoma> {
+  //CRIAÇÃO DAS INPUTS
+  //TextEditingController permite ler/alterar o texto dos TextFields
+  final TextEditingController numero1Controller = TextEditingController();
+  final TextEditingController numero2Controller = TextEditingController();
+
+  //Variável que armazena o resultado da soma e que será exibida na tela
+  double resultado = 0;
+
+  //Função chamada ao pressionar o botão 'Somar'
+  void somar() {
+    //Tenta converter o texto para double; se falhar, usa 0 como padrão
+    double n1 = double.tryParse(numero1Controller.text) ?? 0;
+    double n2 = double.tryParse(numero2Controller.text) ?? 0;
+
+    //setState informa ao Flutter que o estado mudou e a UI deve ser redesenhada
+    setState(() {
+      resultado = n1 + n2;
+    });
+  } //somar
+
+  @override
+  Widget build(BuildContext context) {
+    //Scafold fornece estrutura visual básica (AppBar, Body, etc...)
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Somar Numeros'),
+        backgroundColor: Colors.deepPurple,
+      ),
+
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        //Column organiza os widgets vertucalmente
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            //Primeiro Campo de Texto para o numero 1
+            TextField(
+              controller: numero1Controller,
+              decoration: const InputDecoration(
+                labelText: 'Digite o primeiro número',
+                border: OutlineInputBorder(),
+              ),
+              keyboardType: TextInputType.number, //Abre o teclado numérico
             ),
-          ),
+            const SizedBox(height: 20),
+
+            //Segundo campo de texto para o número 2
+            TextField(
+              controller: numero2Controller,
+              decoration: const InputDecoration(
+                labelText: 'Digite o segundo número',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 20),
+
+            //Botão que dispara a função somar
+            ElevatedButton(onPressed: somar, child: const Text('Somar')),
+            const SizedBox(height: 20),
+
+            //Exibe o resultado atual
+            Text(
+              'Resultado: $resultado',
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+          ],
         ),
-
-
-
-        backgroundColor: Colors.tealAccent,
-
-        body: Center( 
-          child: Column( 
-            mainAxisAlignment: MainAxisAlignment.center, 
-            children: [
-              Text(
-                'Olá Pessoal!',
-                style: TextStyle(
-                  fontSize: 42,
-                  color: Colors.blue,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-
-              SizedBox(height: 22),
-
-              Text(
-                'Estudando Flutter',
-                style: TextStyle(
-                  fontSize: 32,
-                  fontStyle: FontStyle.normal,
-                  color: Colors.green,
-                ),
-              ),
-
-              SizedBox(height: 22),
-
-              Text(
-                'Bora Codar',
-                style: TextStyle(
-                  fontSize: 42,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.deepOrange,
-                ),
-              ),
-
-              SizedBox(height: 22),
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    'Jogos',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontStyle: FontStyle.italic,
-                      color: Colors.deepPurple,
-                    ),
-                  ),
-
-                  SizedBox(width: 44),
-
-                  Text(
-                    'Música',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 26,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.pinkAccent,
-                    ),
-                  ),
-                  
-                  SizedBox(width: 44),
-
-                  Text(
-                    'Séries',
-                    textAlign: TextAlign.right,
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontStyle: FontStyle.italic,
-                      color: Colors.deepOrangeAccent,
-                    ),
-                  ),
-                ],
-              ),
-
-              SizedBox(height: 22),
-
-              Text(
-                '2026 - Vamos Nessa!',
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey,
-                ),
-              ),
-            ],
-          ), 
-        ), 
-      ), 
-    ); 
-  } 
+      ),
+    );
+  }
 }
