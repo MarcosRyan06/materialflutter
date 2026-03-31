@@ -1,171 +1,247 @@
 import 'package:flutter/material.dart';
-//Ponto de Entrada do aplicativo Flutter,
+
 void main() {
   runApp(const MainApp());
 }
 
-//App principal que configura MaterialApp,
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    //Material fornece te,a e navegação básica para o app,
     return const MaterialApp(
-      debugShowCheckedModeBanner: false, //Remove o selo debug,
-      home: const CampGame(),
+      debugShowCheckedModeBanner: false,
+      home: EspaceCadet(),
     );
   }
 }
 
-//*********Camp Game *********/
+class EspaceCadet extends StatefulWidget {
+  const EspaceCadet({super.key});
 
-//Tela que precisa manter estado (Valores dos inputs e resultado)
-
-class CampGame extends StatefulWidget{
-  const CampGame({super.key});
-
-  @override 
-  State<CampGame> createState() => _CampGameState();
-
+  @override
+  State<EspaceCadet> createState() => _EspaceCadet();
 }
 
-//Estado da CampGame: é aqui que guardamos os controllers e o resultado
-class _CampGameState extends State<CampGame>{
+class _EspaceCadet extends State<EspaceCadet> {
+  final distanciaController = TextEditingController();
+  final velocidadeController = TextEditingController();
+  final consumoController = TextEditingController();
+  final combustivelController = TextEditingController();
 
-  //Criação das inputs
-  //TextEditingController permite ler/alterar o texto dos TextFields
-  final TextEditingController vitoriasController = TextEditingController();
-  final TextEditingController derrotasController = TextEditingController();
-  final TextEditingController pontosController = TextEditingController();
+  String resultado = "";
 
-  //Variavel que amarzena o resultado da soma e que será exibida na tela
-  String resultado ="";
+  double tempo = 0;
 
-  //função chamda ao pressionar o botão 'Resultado'
-  void calcular(){
-    //Tenta converter o texto para duble; se falhar, usa 0 como padrão
-    double vitorias=double.tryParse(vitoriasController.text) ?? 0;
-    double derrotas=double.tryParse(derrotasController.text) ?? 0;
-    double pontos=double.tryParse(pontosController.text) ?? 0;
+  void calcularTempo() {
+    double distancia = double.tryParse(distanciaController.text) ?? 0;
+    double velocidade = double.tryParse(velocidadeController.text) ?? 1;
 
-    double partidas = vitorias + derrotas;
-    double pontuacao = vitorias * pontos;
-    double percetual = partidas > 0 ? (vitorias / partidas) * 100 : 0;
+    tempo = distancia / velocidade;
 
-    //SetState informa ao flutter que o setado mudou e a UI deve ser redesenhada
     setState(() {
-      resultado =
-        "Total de partidas: $partidas\n"
-        "Pontuação: $pontuacao\n"
-        "Vitorias: ${percetual.toStringAsFixed(2)} %";
+      resultado = "Tempo de viagem: ${tempo.toStringAsFixed(2)} horas\n";
 
+      if (velocidade > 50000) {
+        resultado += "🚀 Velocidade de dobra ativada!\n";
+      }
+
+      if (tempo > 200) {
+        resultado += "⚠️ Missão muito longa!\n";
+      }
     });
   }
+
+  void calcularCombustivel() {
+    double consumo = double.tryParse(consumoController.text) ?? 0;
+    double combustivelInicial =
+        double.tryParse(combustivelController.text) ?? 0;
+
+    double necessario = tempo * consumo;
+    double restante = combustivelInicial - necessario;
+
+    setState(() {
+      resultado +=
+          "\nCombustível necessário: ${necessario.toStringAsFixed(2)} L\n";
+
+      if (restante >= 0) {
+        resultado += "Combustível restante: ${restante.toStringAsFixed(2)} L\n";
+      } else {
+        resultado += "❌ Combustível insuficiente!\n";
+      }
+    });
+  }
+
+  void calcularTudo() {
+    resultado = "";
+    calcularTempo();
+    calcularCombustivel();
+  }
+
+  void limpar() {
+    distanciaController.clear();
+    velocidadeController.clear();
+    consumoController.clear();
+    combustivelController.clear();
+
+    setState(() {
+      resultado = "";
+    });
+  }
+
   @override
-  Widget build(BuildContext context){
-    //Scaffold fornece estrutura visual básica (AppBar, Body, etc....)
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Brasileirão serie A',
-        style: TextStyle(
-          color: Colors.black
-        ),
-        ),
-        backgroundColor: Colors.lightBlueAccent,
-        actions: const[
-          Icon(Icons.sports_soccer_outlined,
-          color: Colors.black,
+        title: const Text(
+          "EspaceCadet",
+          style: TextStyle(
+            color: Color.fromARGB(255, 0, 0, 0),
+            fontSize: 26,
+            fontStyle: FontStyle.italic,
           ),
-          SizedBox(width: 18), 
+        ),
+        backgroundColor: const Color.fromARGB(255, 118, 143, 255),
+        actions: const [
+          Icon(Icons.rocket_launch, color: Color.fromARGB(255, 0, 0, 0)),
+          SizedBox(width: 12),
         ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
-        //Column organiza os widgets verticalamente
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            //Primeiro Campo de Texto para as estastisticas
             TextField(
-              controller: vitoriasController,
+              controller: distanciaController,
               decoration: const InputDecoration(
-                labelText: 'Vitorias',
+                labelText: "Distância (km)",
                 border: OutlineInputBorder(),
               ),
-              keyboardType: TextInputType.number, //Abre o teclado numérico
+              keyboardType: TextInputType.number,
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 16),
 
             TextField(
-              controller: derrotasController,
+              controller: velocidadeController,
               decoration: const InputDecoration(
-                labelText: 'Derrotas',
+                labelText: "Velocidade (km/h)",
+                border: OutlineInputBorder(),
+              ),
+              keyboardType: TextInputType.number,
+            ),
+            const SizedBox(height: 16),
+
+            TextField(
+              controller: consumoController,
+              decoration: const InputDecoration(
+                labelText: "Consumo (L/h)",
+                border: OutlineInputBorder(),
+              ),
+              keyboardType: TextInputType.number,
+            ),
+            const SizedBox(height: 16),
+
+            TextField(
+              controller: combustivelController,
+              decoration: const InputDecoration(
+                labelText: "Combustível Inicial (L)",
                 border: OutlineInputBorder(),
               ),
               keyboardType: TextInputType.number,
             ),
             const SizedBox(height: 20),
 
-            TextField(
-              controller: pontosController,
-              decoration: const InputDecoration(
-                labelText: 'Pontos por Vitoria',
-                border: OutlineInputBorder(),
-              ),
-              keyboardType: TextInputType.number,
-            ),
-            const SizedBox(height: 25),
-
-            ElevatedButton.icon(
-              onPressed: calcular,
-              icon: const Icon(Icons.calculate,
-              color: Colors.lightBlueAccent,
-              ),
-              label: const Text('Calcular pontuação',
-              style: TextStyle(
-                color: Colors.black,
-              ),
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.lightBlueAccent,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 30, //Insere uma borda dentro do botão deixando o mais facil de clicar
-                  vertical: 15,
+            Row(
+              children: [
+                ElevatedButton.icon(
+                  onPressed: calcularTempo,
+                  label: const Text(
+                    "Tempo",
+                    style: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 15,
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            const SizedBox(height: 30),
+                const SizedBox(width: 20),
 
-            Text(
-              resultado,
-              style: const TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: Colors.lightBlueAccent,
+                ElevatedButton.icon(
+                  onPressed: calcularCombustivel,
+                  label: const Text(
+                    "Combustível",
+                    style: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 15,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 20),
+
+
+                const SizedBox(width: 20),
+              ],
+            ),
+
+            const SizedBox(height: 20),
+
+            Row(
+              children: [
+                ElevatedButton.icon(
+                  onPressed: limpar,
+                  label: const Text(
+                    "Limpar",
+                    style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 255, 0, 0),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 15,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 20),
+                
+                ElevatedButton.icon(
+                  onPressed: calcularTudo,
+                  label: const Text(
+                    "Calcular",
+                    style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 46, 126, 0),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 15,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20),
+
+              ],
+            ),
+
+            const SizedBox(height: 20),
+
+            Expanded(
+              child: SingleChildScrollView(
+                child: Text(
+                  resultado,
+                  style: const TextStyle(fontSize: 18),
+                ),
               ),
             ),
           ],
         ),
       ),
-  );
+    );
+  }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-}
-
